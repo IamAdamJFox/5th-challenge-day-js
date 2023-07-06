@@ -1,47 +1,89 @@
-// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// the code isn't run until the browser has finished rendering all the elements
-// in the html.
+const dayjs = require('dayjs')
+dayjs().format()
 function getHeaderDate() {
-  var currentHeaderDate = moment().format('dddd, MMMM Do');
-  $("#currentDay").text(currentHeaderDate);
+  var currentHeaderDate = dayjs().format('dddd, MMMM Do');
+  document.getElementById("currentDay").textContent = currentHeaderDate;
 }
-  function saveReminders() {
+
+function saveReminders() {
   localStorage.setItem("myDay", JSON.stringify(myDay));
 }
+
 function displayReminders() {
   myDay.forEach(function (_thisHour) {
-      $(`#${_thisHour.id}`).val(_thisHour.reminder);
-  })
+    $("#" + _thisHour.id).val(_thisHour.reminder);
+  });
 }
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
-  //
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
+
+function init() {
+  var storedDay = JSON.parse(localStorage.getItem("myDay"));
+
+  if (storedDay) {
+    myDay = storedDay;
+  }
+
+  saveReminders();
+  displayReminders();
+}
+
+// Loads header date
+getHeaderDate();
+
+// Creates the visuals for the scheduler body
+myDay.forEach(function (thisHour) {
+  // Creates timeblocks row
+  var hourRow = $("<form>").attr({
+    "class": "row",
+  });
+  $(".container").append(hourRow);
+
+  // Creates time field
+  var hourField = $("<div>")
+    .text(thisHour.hour + thisHour.meridiem)
+    .attr({
+      "class": "col-md-2 hour",
+    });
+
+  // Creates scheduler data
+  var hourPlan = $("<div>")
+    .attr({
+      "class": "col-md-9 description p-0",
+    });
+  var planData = $("<textarea>");
+  hourPlan.append(planData);
+  planData.attr("id", thisHour.id);
+  
+  // Add the past, present, or future class to each time block based on the current hour
   if (dayjs().isAfter(dayjs().format("HH"), "hour")) {
-    planData.attr ({
-        "class": "past", 
-    })
-} else if (dayjs().isSame(dayjs().format("HH"), "hour")) {
-    planData.attr({
-        "class": "present"
-    })
-} else if (dayjs().isBefore(dayjs().format("HH"), "hour")) {
-    planData.attr({
-        "class": "future"
-    })
-}
+    planData.attr("class", "past");
+  } else if (dayjs().isSame(dayjs().format("HH"), "hour")) {
+    planData.attr("class", "present");
+  } else if (dayjs().isBefore(dayjs().format("HH"), "hour")) {
+    planData.attr("class", "future");
+  }
 
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-  //
-  // TODO: Add code to display the current date in the header of the page.
+  // TODO: Add code to get any user input that was saved in localStorage and set the values of the corresponding textarea elements.
+  // You can use the id attribute of each time-block to access the saved data from the myDay array.
+  
+  // ...
 
+  var saveButton = $("<i class='far fa-save fa-lg'></i>");
+  var savePlan = $("<button>").attr({
+    "class": "col-md-1 saveBtn",
+  });
+  savePlan.append(saveButton);
+  hourRow.append(hourField, hourPlan, savePlan);
+});
+
+// Loads any existing localStorage data after components are created
+init();
+
+// Saves data to be used in localStorage
+$(".saveBtn").on("click", function (event) {
+  event.preventDefault();
+  var saveIndex = $(this).siblings(".description").children(".future").attr("id");
+  myDay[saveIndex].reminder = $(this).siblings(".description").children(".future").val();
+  console.log(saveIndex);
+  saveReminders();
+  displayReminders();
+});
