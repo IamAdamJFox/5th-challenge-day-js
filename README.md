@@ -4,7 +4,7 @@ Welcome to my day planner! This simple application will assist you in planning o
 
 To use simply load the page, write down your tasks, plans, etc in the corresponding time slot and hit save.
 
-![dayplanner](.\assests\img\day planner.png)
+![day planner](https://github.com/IamAdamJFox/5th-challenge-day-js/assets/125314107/613e416c-7565-4c7f-912d-633c9f3ab437)
 
 deployed url
 http://127.0.0.1:5500/assests/index.html
