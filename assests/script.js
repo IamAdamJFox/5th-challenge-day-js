@@ -32,9 +32,11 @@ $(".time-block").each(function () {
   if(hour > currentHour) {
     timeBlock.addClass("future");
   }
+
   if(hour < currentHour){
     timeBlock.addClass('past')
-  }else{
+  }
+  else{
     timeBlock.addClass('present')
   }
 });
