@@ -46,6 +46,6 @@ $(".time-block").each(function () {
     timeBlock.addClass('present')
   }
 });
-  
+
 
 });
