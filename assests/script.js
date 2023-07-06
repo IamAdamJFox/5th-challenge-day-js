@@ -20,10 +20,23 @@ $(function () {
 const today = dayjs();
 const currentHour = parseInt(today.format("H"))
 
+
+
 $(".time-block").each(function () {
   const timeBlock = $(this);
   const hour = timeBlock.attr("id").split("-").pop();
   console.log(hour);
+  
+  let currentHour = dayjs().hour();
+
+  if(hour > currentHour) {
+    timeBlock.addClass("future");
+  }
+  if(hour < currentHour){
+    timeBlock.addClass('past')
+  }else{
+    timeBlock.addClass('present')
+  }
 });
   // TODO: Add code to get any user input that was saved in localStorage and set
   // the values of the corresponding textarea elements. HINT: How can the id
