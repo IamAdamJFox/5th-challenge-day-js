@@ -1,10 +1,5 @@
-// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// the code isn't run until the browser has finished rendering all the elements
-
-
-
-// in the html.
 $(function () {
+  // save button function to save text
   $('.saveBtn').on('click', function () {
     const $this = $(this);
     const val = $this.siblings('textarea').eq(0).val();
@@ -14,7 +9,7 @@ $(function () {
 
     console.log(val);
   });
-  // need fucntion to pull from local
+  //this function pulls saved item from local storage
   $('.time-block').each(function () {
     const $this = $(this);
     const id = $this.attr('id');
@@ -22,11 +17,12 @@ $(function () {
 
     $this.children('textarea').eq(0).val(val)
   });
-  //to add current day
+//sets current day for the header in html
   const currentDay = $('#currentDay');
   const time = dayjs();
   currentDay.text(time.format('dddd, MMMM D'));
 
+//sets dayjs and hour
   const today = dayjs();
   const currentHour = parseInt(today.format("H"))
 
@@ -38,7 +34,7 @@ $(".time-block").each(function () {
   console.log(hour);
   
   let currentHour = dayjs().hour();
-
+//if statements set ccs classes for present, past, and future
   if(hour > currentHour) {
     timeBlock.addClass("future");
   }
